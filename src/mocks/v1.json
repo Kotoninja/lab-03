@@ -1,0 +1,29 @@
+{
+    "format_version" : 1,
+    "data": {
+        "1": {
+            "id": "1",
+            "title": "Pride and Prejudice",
+            "category": "Fiction",
+            "timestamp": "2026-01-02",
+            "author": "Jane Austen",
+            "price": "12.50"
+        },
+        "2": {
+            "id": "2",
+            "title": "The Master and Margarita",
+            "category": "Fiction",
+            "timestamp": "2026-01-02T10:00:00+00:00",
+            "author": "Mikhail Bulgakov",
+            "price": "15.75"
+        },
+        "3": {
+            "id": "3",
+            "title": "A Brief History of Time",
+            "category": "Science",
+            "timestamp": "2026-01-03T10:00:00+00:00",
+            "author": "Stephen Hawking",
+            "price": "18.00"
+        }
+    }
+}
