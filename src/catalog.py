@@ -48,7 +48,7 @@ class Catalog:
 
     def __iter__(self):
         """Итерации идут в порядке добавления кинг"""
-        yield from self.data.items()
+        return iter(self.data.values())
 
     def __contains__(self, item_id):
         return item_id in self.data
