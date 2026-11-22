@@ -26,7 +26,7 @@ def run() -> None:
             id="5",
             title="The Time Machine",
             category="Science Fiction",
-            timestamp=datetime(2026, 1, 5, 10, tzinfo=UTC),
+            timestamp=datetime(2026, 1, 5, 10, tzinfo=UTC, ),
             author="H. G. Wells",
             price=Decimal("9.75"),
         ),
@@ -42,7 +42,6 @@ def run() -> None:
     for book in books:
         catalog.add(book)
 
-    # mock_file = SOURCE_DIR / "mocks" / "v1.json"
-    # catalog.update(storage.load(file=mock_file))
-
+    mock_file = SOURCE_DIR / "mocks" / "v1.json"
+    catalog.update(storage.load(file=mock_file))
     storage.save(catalog=catalog)

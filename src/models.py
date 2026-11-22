@@ -10,7 +10,7 @@ class BookModel:
     id: str
     title: str
     category: str
-    timestamp: datetime | None | str
+    timestamp: datetime | str | None
     author: str
     price: Decimal
 
@@ -26,11 +26,13 @@ class BookModel:
         elif not isinstance(self.price, Decimal) or not self.price:
             raise errors.InvalidEssence("Поле price должно быть ненулевым числом")
         elif not self.timestamp or (
-            isinstance(self.timestamp, str) and not self.timestamp
+            isinstance(self.timestamp, str) and not self.timestamp.strip()
         ):
             raise errors.InvalidEssence("Поле timestamp должно быть непустым полем")
 
         try:
             self.timestamp = datetime.fromisoformat(str(self.timestamp))
+            if self.timestamp.tzinfo is None:
+                raise errors.InvalidEssence("Поле timestamp должно содержать дату и время с указанием часового пояса.")
         except (ValueError, TypeError, AttributeError):
             raise errors.InvalidEssence("У поля timestamp неверная временная метка")

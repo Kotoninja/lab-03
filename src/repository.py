@@ -21,13 +21,16 @@ class Storage:
 
         document = {"format_version": self.version, "data": {}}
         for book in catalog.data.values():
+            timestamp = book.timestamp
             document["data"][book.id] = {
                 "id": book.id,
                 "title": book.title,
                 "category": book.category,
                 "author": book.author,
                 "timestamp": (
-                    book.timestamp.isoformat() if book.timestamp is not None else None
+                    timestamp.isoformat()
+                    if isinstance(timestamp, datetime)
+                    else timestamp
                 ),
                 "price": str(book.price),
             }
@@ -62,7 +65,7 @@ class Storage:
         buffer_catalog: Catalog = Catalog()
 
         for book in document["data"].values():
-            essence_bookect: BookModel = BookModel(
+            essence_book: BookModel = BookModel(
                 id=book["id"],
                 title=book["title"],
                 category=book["category"],
@@ -75,6 +78,6 @@ class Storage:
                 price=Decimal(book["price"]),
             )
 
-            buffer_catalog.add(essence_bookect)
+            buffer_catalog.add(essence_book)
 
         return list(buffer_catalog.data.values())
