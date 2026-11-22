@@ -1,5 +1,5 @@
 from dataclasses import replace
-from datetime import datetime
+from datetime import UTC, datetime
 from decimal import Decimal
 from unittest import TestCase
 
@@ -13,7 +13,7 @@ class TestBookModel(TestCase):
             id="book-1",
             title="Pride and Prejudice",
             category="Fiction",
-            timestamp=None,
+            timestamp="2026-10-12T00:00:00+00:00",
             author="Jane Austen",
             price=Decimal("12.50"),
         )
@@ -38,9 +38,9 @@ class TestBookModel(TestCase):
             replace(self.book, category="\t")
 
     def test_timestamp(self):
-        self.assertIsNone(self.book.timestamp)
+        self.assertEqual(self.book.timestamp, datetime(2026, 10, 12, tzinfo=UTC))
 
-        timestamp = datetime(2026, 1, 1)
+        timestamp = datetime(2026, 1, 1, tzinfo=UTC)
         book = replace(self.book, timestamp=timestamp)
 
         self.assertEqual(book.timestamp, timestamp)
