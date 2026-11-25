@@ -7,8 +7,10 @@ class Catalog:
         self.data: dict[str, BookModel] = {}
 
     def add(self, item: BookModel) -> None:
+        if not isinstance(item, BookModel):
+            raise errors.InvalidEssence
         if item.id in self.data:
-            raise errors.DuplicateID()
+            raise errors.DuplicateID
         self.data[item.id] = item
 
     def get(self, item_id: str) -> BookModel:

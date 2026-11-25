@@ -50,9 +50,7 @@ class TestCatalog(TestCase):
         second_book = replace(self.book, id="book-2", title="Sense and Sensibility")
         self.catalog.add(second_book)
         self.catalog.add(self.book)
-        self.assertEqual(
-            list(self.catalog), [(second_book.id, second_book), (self.book.id, self.book)]
-        )
+        self.assertEqual(list(self.catalog), [second_book, self.book])
 
     def test_find_by_category(self) -> None:
         self.catalog.add(self.book)
