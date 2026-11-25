@@ -4,14 +4,13 @@ from decimal import Decimal
 from pathlib import Path
 
 from src.catalog import Catalog
+from src.constans import FORMAT_VERSION, RESULTS_DIR
 from src.errors import DamagedFile, UnsupportedFormatVersion
 from src.models import BookModel
 
-RESULTS_DIR = Path(__file__).resolve().parent / "results"
-
 
 class Storage:
-    def __init__(self, version: int = 1):
+    def __init__(self, version: int = FORMAT_VERSION):
         self.version: int = version
         self.counst_save: int = 1
 

@@ -11,7 +11,6 @@ from src.errors import DamagedFile
 from src.models import BookModel
 from src.repository import Storage
 
-
 BOOK = BookModel(
     id="book-1",
     title="Мастер и Маргарита",
