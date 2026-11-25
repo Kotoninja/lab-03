@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 import json
+from dataclasses import fields
 from datetime import datetime
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 from pathlib import Path
 
 from src.constans import FORMAT_VERSION, LOAD_DIR, RESULTS_DIR
-from src.errors import DamagedFile, UnsupportedFormatVersion
+from src.errors import DamagedFile, InvalidEssence, UnsupportedFormatVersion
 from src.models import BookModel
 
 
@@ -36,6 +37,15 @@ def save(file_path: Path, catalog):
         json.dump({"format_version": FORMAT_VERSION, "data": books}, file, indent=4)
 
 
+def check_instance(obj: dict, file_path: Path):
+    if not isinstance(obj, dict):
+        raise DamagedFile(file_path=file_path)
+
+    for field in fields(BookModel):
+        if field.name not in obj:
+            raise DamagedFile(file_path=file_path)
+
+
 def load(file_path: Path) -> list[BookModel]:
     from src.catalog import Catalog
 
@@ -51,7 +61,10 @@ def load(file_path: Path) -> list[BookModel]:
     if document is None or not isinstance(document, dict):
         raise DamagedFile(file_path=file_path)
 
-    if "format_version" not in document or "data" not in document:
+
+    if (
+        "format_version" not in document or not (isinstance(document["format_version"], int) and not isinstance(document["format_version"], bool))
+    ) or ("data" not in document or not isinstance(document["data"], dict)):
         raise DamagedFile(file_path=file_path)
 
     format_version = document["format_version"]
@@ -62,16 +75,22 @@ def load(file_path: Path) -> list[BookModel]:
     buffer_catalog: Catalog = Catalog()
 
     for book in document["data"].values():
-        essence_book: BookModel = BookModel(
-            id=book["id"],
-            title=book["title"],
-            category=book["category"],
-            timestamp=(
-                datetime.fromisoformat(book["timestamp"]) if book["timestamp"] else None
-            ),
-            author=book["author"],
-            price=Decimal(book["price"]),
-        )
+        check_instance(book, file_path)
+
+
+        try:
+            essence_book: BookModel = BookModel(
+                id=book["id"],
+                title=book["title"],
+                category=book["category"],
+                timestamp=(
+                    datetime.fromisoformat(book["timestamp"]) if book["timestamp"] else None
+                ),
+                author=book["author"],
+                price=Decimal(book["price"]),
+            )
+        except (InvalidOperation, ValueError, TypeError, InvalidEssence):
+            raise DamagedFile(file_path)
 
         buffer_catalog.add(essence_book)
 

@@ -56,3 +56,7 @@ class TestBookModel(TestCase):
         self.assertEqual(self.book.price, Decimal("12.50"))
         with self.assertRaises(InvalidEssence):
             replace(self.book, price=Decimal("0.0"))
+        with self.assertRaises(InvalidEssence):
+            replace(self.book, price=Decimal("-10.0"))
+
+        

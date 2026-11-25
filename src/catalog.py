@@ -14,7 +14,7 @@ class Catalog:
     def add(self, item: BookModel) -> None:
         """Добавление в каталог"""
         if not isinstance(item, BookModel):
-            raise errors.InvalidEssence
+            raise errors.InvalidEssence("Ожидался объект BookMode")
         if item.id in self.data:
             raise errors.DuplicateID
         self.data[item.id] = item

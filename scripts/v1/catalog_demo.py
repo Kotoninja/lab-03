@@ -13,7 +13,7 @@ def run() -> None:
 
     books = (
         BookModel(
-            id="book-1",
+            id="1",
             title="Frankenstein",
             category="Fiction",
             timestamp=datetime(2026, 1, 4, 10, tzinfo=UTC),
@@ -24,7 +24,5 @@ def run() -> None:
     for book in books:
         catalog.add(book)
 
-    print(catalog.data)
     catalog.load(file_path=Path("mocks/v1.json")) 
-    print(catalog.data)
-    # catalog.save(Path("save_v1.json"))
+    catalog.save(Path("save_v1.json"))
