@@ -13,16 +13,35 @@ def run() -> None:
 
     books = (
         BookModel(
-            id="1",
+            id="4",
             title="Frankenstein",
             category="Fiction",
             timestamp=datetime(2026, 1, 4, 10, tzinfo=UTC),
             author="Mary Shelley",
-            price=Decimal("15.2"),
+            price=Decimal("10.50"),
+        ),
+        BookModel(
+            id="5",
+            title="The Time Machine",
+            category="Science Fiction",
+            timestamp=datetime(2026, 1, 5, 10, tzinfo=UTC),
+            author="H. G. Wells",
+            price=Decimal("9.75"),
+        ),
+        BookModel(
+            id="6",
+            title="On the Origin of Species",
+            category="Science",
+            timestamp="2026-01-02T00:00:00+00:00",
+            author="Charles Darwin",
+            price=Decimal("14.00"),
         ),
     )
     for book in books:
         catalog.add(book)
 
     catalog.load(file_path=Path("mocks/v1.json")) 
+
+    catalog.remove("4")
+    
     catalog.save(Path("save_v1.json"))
