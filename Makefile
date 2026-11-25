@@ -1,0 +1,7 @@
+run:
+	uv run python3 -m src.main
+
+test:
+	uv run python3 -m pytest tests
+	uv run ruff check .
+	uv run mypy .

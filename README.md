@@ -1,63 +1,95 @@
-# Шаблон репозитория, для успешной сдачи лабораторных работ.
+# Лабораторная работа 3. Каталог объектов
 
-## Введение
-Данный шаблон является примером оформления кода для сдачи лабораторных работ.
-Рекомендуется  строго его придерживаться во избежания проблем при сдаче и понижения баллов
-
-
+Предметная модель: библиотечные книги
 ## Структура проекта
 
- <pre>
-    .
-    ├── lab<# лабораторной работы>             # Кодовая база вашей лабораторной работы
-    │   ├── src/                               # Исходный код
-    │   ├── tests/                             # Unit тесты
-    │   ├── uv.lock                            # зависимости вашего проекта
-    │   ├── report.pdf                         # Отчет
-    │   ├── .gitignore                         # git ignore файл
-    │   ├──.pre-commit-config.yaml             # Средства автоматизации проверки кодстайла
-    │   ├── README.md                          # Описание вашего проекта, с описанием файлов и с титульником о том,
-                                               # что и какая задача
-</pre>
-
-В папке [src](./src) лежат файлы с реализацией задачи заданной в лабораторной работе. Обязательным файлом является файл
-[main.py](./src/main.py) в котором описана точка входа в приложение - функция **main**. Требования к коду:
-- Переменные, функции и модули именуются по [**snake_case**](https://realpython.com/ref/glossary/snake-case/)
-- Константы должны быть вынесены в файл **constants.py** и именовановаться с помощию символов в верхнем регистре
-- Классы должны именоваться в [**PascalCase**](https://habr.com/ru/articles/724556/)
-- Имена сущностей должны быть осмысленные и содержательные
-- Все отступы должны быть консистентны: 1 TAB = 4 spaces
-- Весь функционал должен быть описан в функциях и в классах. Не допускается писать весь в глобальном скоупе или в одной функции
-- К каждой функции должны быть описаны  [**docstring**](https://peps.python.org/pep-0257/) и аннотации к аргументам и выходным параметрам функций.
-
-В качестве референса проще cходу соблюдать [**PEP8**](https://peps.python.org/pep-0008/) и использовать IDE c готовой поддержкой:
-например PyCharm или VSCode c настроенными плагинами.
-В ходе попыток запушить код в репозиторий ваш код будет проходить проверку статическим анализатором [**mypy**](https://mypy-lang.org/)
-а также с встроенным в [**ruff**](https://astral.sh/ruff) на предмет нарушения код стайла. При работе с кодовой базой
-всю работу необходимо выполнять в [виртуальном окружении](https://docs.python.org/3/tutorial/venv.html)
-
-
-В папке [tests](./tests) лежат [unit тесты](https://tproger.ru/articles/testiruem-na-python-unittest-i-pytest-instrukcija-dlja-nachinajushhih) для проверки функциональности программы или ее частей.
-Рекомендуется использовать pytest. Также название тестов должно быть осмысленно и содержать определение проверямой части.
-Базовые соглашения pytest можно посмотреть [здесь](https://www.qabash.com/pytest-default-naming-conventions-guide/).
-Рекомендуется проверять не только успешные кейсы, но и краевые условия и кейсы в которых была допущена ошибка (неудачные кейсы).
-
-В качестве пакетного менджера в данном шаблоне/репозитории используется [uv](https://github.com/astral-sh/uv).
-Можно использовать и [стандартные виртальные окружения](https://docs.python.org/3/library/venv.html). В таком случае необходимо добавить в репозиторий `requirements.txt`.
-Это достигается командой
-```shell
-pip freeze > requirements.txt
 ```
-Также разрешается использовать [`poetry`](https://python-poetry.org/)
-## Как работать с репозиторием и шаблонами
-1. Необходимо создать репозиторий из этого шаблона. Посмотреть можно [здесь](https://docs.github.com/ru/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template)
-2. Склонировать или спуллить его к себе на машину командами `git pull` или `git clone`
-3. Создать виртуальное окружение:
+.
+├── src/
+│   ├── main.py                  # Точка входа
+│   ├── catalog.py               # Операции с каталогом
+│   ├── constans.py              # Константные данные
+│   ├── models.py                # Модель книги
+│   ├── repository.py            # Загрузка и сохранение каталога
+│   ├── errors.py                # Исключения
+│   ├── mocks/                   # Примеры входных JSON-файлов
+│   │   ├── v1.json
+│   │   └── v2.json
+│   └── results/                 # Результаты сохранения
+├── scripts/
+│   └── v1/
+│       └── catalog_demo.py      # Демонстрационный запуск
+└── tests/
+    ├── test_catalog.py         
+    ├── test_json.py             
+    └── test_models.py           
+```
 
-    a. Для uv прописать команду `uv venv`. Затем прописать `.venv/bin/activate` в терминале
 
-    b. Для обычного python `python -m venv <имя директории где будет храниться папка .venv>`. Затем прописать `.venv/bin/activate` в терминале
-4. Установить [`pre-commit`](https://pre-commit.com/). Для этого достаточно ввести команду `pip install pre-commit`
-5. Выполнить команду `pre-commit install`
-6. При запушивании в репозиторий необходимо правильно составлять сообщения коммита. Правила можно прочитать [здесь](https://github.com/RomuloOliveira/commit-messages-guide/blob/master/README_ru-RU.md)
-7. **Внимательно** читайте то, что пишется при попытке коммита, если исправили ошибки нужно заново добавить отредактированные файлы в гит и попробовать коммитнуть
+## Установка и локальный запуск
+
+Для запуска нужен Python 3.12 и новее и uv
+```bash
+uv sync
+make run
+```
+
+Тесты
+```bash
+make test 
+```
+
+## Использование модели
+
+
+```python
+from datetime import UTC, datetime
+from decimal import Decimal
+from pathlib import Path
+
+from src.catalog import Catalog
+from src.models import BookModel
+
+book = BookModel(
+    id="5",
+    title="The Time Machine",
+    category="Science Fiction",
+    timestamp=datetime(2026, 1, 5, 10, tzinfo=UTC),
+    author="H. G. Wells",
+    price=Decimal("9.75"),
+) # Создание экземпляра модели
+
+catalog = Catalog() # Инициализация каталога
+catalog.add(book) # Добавления объекта в каталог
+
+print(catalog.get("5").title) # получить объект из каталога
+print(catalog.find_by_name("the time machine").author) # поиск объекта в каталоге
+
+catalog.save(Path("example.json")) # Сохранить каталог в JSON формате
+
+restored = Catalog()
+restored.load(Path("results/example.json")) # загрузить каталог из JSON
+assert restored.get("5") == book
+
+restored.remove("5") # удалить объект из каталога
+assert len(restored) == 0
+```
+
+## Формат JSON хранилища
+```json
+{
+    "format_version": 1,
+    "data": {
+        "unique_id": {
+            "id": "str",
+            "title": "str",
+            "category": "str",
+            "author": "str",
+            "timestamp": "date in timezone",
+            "price": "Decimal format"
+        },
+    }
+}
+```
+
+

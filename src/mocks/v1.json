@@ -1,0 +1,21 @@
+{
+    "format_version" : 1,
+    "data": {
+        "book-2": {
+            "id": "1",
+            "title": "Pride and Prejudice",
+            "category": "Fiction",
+            "timestamp": "2026-01-01T10:00:00+00:00",
+            "author": "Jane Austen",
+            "price": "12.50"
+        },
+        "book-1": {
+            "id": "1",
+            "title": "Pride and Prejudice",
+            "category": "Fiction",
+            "timestamp": "2026-01-01T10:00:00+00:00",
+            "author": "Jane Austen",
+            "price": "12.50"
+        }
+    }
+}
