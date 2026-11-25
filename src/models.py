@@ -15,6 +15,7 @@ class BookModel:
     price: Decimal
 
     def __post_init__(self):
+        """Валидация после инициализации"""
         if not isinstance(self.id, str) or not self.id:
             raise errors.InvalidEssence("Поле id должно быть непустой строкой")
         elif not isinstance(self.title, str) or not self.title.strip():
@@ -23,8 +24,8 @@ class BookModel:
             raise errors.InvalidEssence("Поле category должно быть непустой строкой")
         elif not isinstance(self.author, str) or not self.author.strip():
             raise errors.InvalidEssence("Поле author должно быть непустой строкой")
-        elif not isinstance(self.price, Decimal) or not self.price:
-            raise errors.InvalidEssence("Поле price должно быть ненулевым числом")
+        elif not isinstance(self.price, Decimal) or not (self.price.is_finite() and self.price > 0):
+            raise errors.InvalidEssence("Поле price должно быть ненулевым числом больше 0")
         elif not self.timestamp or (
             isinstance(self.timestamp, str) and not self.timestamp.strip()
         ):

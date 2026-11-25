@@ -1,82 +1,78 @@
+from __future__ import annotations
+
 import json
 from datetime import datetime
 from decimal import Decimal
 from pathlib import Path
 
-from src.catalog import Catalog
-from src.constans import FORMAT_VERSION, RESULTS_DIR
+from src.constans import FORMAT_VERSION, LOAD_DIR, RESULTS_DIR
 from src.errors import DamagedFile, UnsupportedFormatVersion
 from src.models import BookModel
 
 
-class Storage:
-    def __init__(self, version: int = FORMAT_VERSION):
-        self.version: int = version
-        self.counst_save: int = 1
+def save(file_path: Path, catalog):
+    """Сохранить каталог в JSON"""
+    if not RESULTS_DIR.is_dir():
+        RESULTS_DIR.mkdir()
 
-    def save(self, catalog: Catalog) -> None:
-        if not RESULTS_DIR.is_dir():
-            RESULTS_DIR.mkdir()
+    books: dict[str, dict[str, str | None]] = {}
+    for book in catalog.data.values():
+        timestamp = book.timestamp
+        books[book.id] = {
+            "id": book.id,
+            "title": book.title,
+            "category": book.category,
+            "author": book.author,
+            "timestamp": (
+                timestamp.isoformat() if isinstance(timestamp, datetime) else timestamp
+            ),
+            "price": str(book.price),
+        }
+    with open(
+        RESULTS_DIR / file_path,
+        mode="w",
+        encoding="utf-8",
+    ) as file:
+        json.dump({"format_version": FORMAT_VERSION, "data": books}, file, indent=4)
 
-        document = {"format_version": self.version, "data": {}}
-        for book in catalog.data.values():
-            timestamp = book.timestamp
-            document["data"][book.id] = {
-                "id": book.id,
-                "title": book.title,
-                "category": book.category,
-                "author": book.author,
-                "timestamp": (
-                    timestamp.isoformat()
-                    if isinstance(timestamp, datetime)
-                    else timestamp
-                ),
-                "price": str(book.price),
-            }
-        with open(
-            RESULTS_DIR / f"save_{self.counst_save}.json",
-            mode="w",
-            encoding="utf-8",
-        ) as file:
-            json.dump(document, file, indent=4)
 
-        self.counst_save += 1
+def load(file_path: Path) -> list[BookModel]:
+    from src.catalog import Catalog
 
-    def load(self, file: Path) -> list[BookModel]:
-        document: dict | None = None
-        with file.open(mode="r", encoding="utf-8") as f:
-            try:
-                document = json.load(f)
-            except json.JSONDecodeError:
-                raise DamagedFile(file_path=file)
+    """Загрузить каталог из JSON"""
 
-        if document is None or not isinstance(document, dict):
-            raise DamagedFile(file_path=file)
+    document: dict | None = None
+    with open(LOAD_DIR / file_path, mode="r", encoding="utf-8") as f:
+        try:
+            document = json.load(f)
+        except json.JSONDecodeError:
+            raise DamagedFile(file_path=file_path)
 
-        if "format_version" not in document or "data" not in document:
-            raise DamagedFile(file_path=file)
+    if document is None or not isinstance(document, dict):
+        raise DamagedFile(file_path=file_path)
 
-        format_version = document["format_version"]
+    if "format_version" not in document or "data" not in document:
+        raise DamagedFile(file_path=file_path)
 
-        if not isinstance(format_version, int) or format_version != self.version:
-            raise UnsupportedFormatVersion
+    format_version = document["format_version"]
 
-        buffer_catalog: Catalog = Catalog()
+    if not isinstance(format_version, int) or format_version != FORMAT_VERSION:
+        raise UnsupportedFormatVersion
 
-        for book in document["data"].values():
-            essence_book: BookModel = BookModel(
-                id=book["id"],
-                title=book["title"],
-                category=book["category"],
-                timestamp=(
-                    datetime.fromisoformat(book["timestamp"])
-                    if book["timestamp"]
-                    else None
-                ),
-                author=book["author"],
-                price=Decimal(book["price"]),
-            )
+    buffer_catalog: Catalog = Catalog()
 
-            buffer_catalog.add(essence_book)
+    for book in document["data"].values():
+        essence_book: BookModel = BookModel(
+            id=book["id"],
+            title=book["title"],
+            category=book["category"],
+            timestamp=(
+                datetime.fromisoformat(book["timestamp"]) if book["timestamp"] else None
+            ),
+            author=book["author"],
+            price=Decimal(book["price"]),
+        )
 
-        return list(buffer_catalog.data.values())
+        buffer_catalog.add(essence_book)
+
+    return list(buffer_catalog.data.values())

@@ -3,3 +3,5 @@ run:
 
 test:
 	uv run python3 -m pytest tests
+	uv run ruff check .
+	uv run mypy .

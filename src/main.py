@@ -5,7 +5,7 @@ from src.errors import CatalogError
 
 
 def main() -> None:
-    """Run the catalog demo."""
+    """Запустить демонстрационную версию"""
     run()
 
 
@@ -14,5 +14,5 @@ if __name__ == "__main__":
         main()
         sys.exit(0)
     except CatalogError as e:
-        sys.stdout.write(str(e))
+        sys.stdout.write(str(e) + "\n")
         sys.exit(2)
